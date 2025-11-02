@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">LivSeva</string>
+    <string name="title_activity_main">LivSeva</string>
+    <string name="package_name">com.hospital.management</string>
+    <string name="custom_url_scheme">com.hospital.management</string>
+</resources>
