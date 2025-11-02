@@ -1,0 +1,2 @@
+flutter devices
+flutter run
