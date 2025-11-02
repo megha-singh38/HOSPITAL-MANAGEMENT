@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Healthcare Appointment Booking</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Dashboard/Home Screen -->
+    <div id="dashboard" class="screen active">
+        <!-- Header -->
+        <header class="header">
+            <div class="user-profile">
+                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face" alt="User" class="avatar">
+                <div class="greeting">
+                    <p class="greeting-text" id="timeGreeting">Good morning!</p>
+                    <h3 class="username">Rajesh Kumar 👋</h3>
+                </div>
+            </div>
+            <div class="notification" onclick="showScreen('notifications')">
+                <i class="fas fa-bell"></i>
+                <span class="notification-badge">3</span>
+            </div>
+        </header>
+
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="location-header">
+                <div class="location-info" onclick="showLocationModal()">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <div>
+                        <span class="location-label">Your Location</span>
+                        <span class="location-name" id="currentLocation">Andheri West, Mumbai</span>
+                    </div>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+            </div>
+            <h1>How are you feeling today?</h1>
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search a doctor, medicine, etc...">
+                <i class="fas fa-microphone"></i>
+            </div>
+        </section>
+
+        <!-- Health Summary Cards -->
+        <section class="health-summary">
+            <div class="summary-cards">
+                <div class="summary-card upcoming" onclick="showScreen('appointmentQueue')">
+                    <div class="card-icon">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <div class="card-content">
+                        <h4>Upcoming Appointment</h4>
+                        <p>Today, 2:30 PM</p>
+                        <span class="card-subtitle">Dr. Amit Patel</span>
+                    </div>
+                </div>
+                <div class="summary-card reports" onclick="showScreen('medicalRecords')">
+                    <div class="card-icon">
+                        <i class="fas fa-file-medical"></i>
+                    </div>
+                    <div class="card-content">
+                        <h4>Pending Reports</h4>
+                        <p>2 Reports</p>
+                        <span class="card-subtitle">Blood Test, X-Ray</span>
+                    </div>
+                </div>
+                <div class="summary-card medicine" onclick="showScreen('reminders')">
+                    <div class="card-icon">
+                        <i class="fas fa-pills"></i>
+                    </div>
+                    <div class="card-content">
+                        <h4>Medicine Reminder</h4>
+                        <p>3 Pending</p>
+                        <span class="card-subtitle">Next: 6:00 PM</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quick Shortcuts -->
+        <section class="quick-shortcuts">
+            <h2>Quick Actions</h2>
+            <div class="shortcuts-grid">
+                <div class="shortcut-card" onclick="goToBooking()">
+                    <i class="fas fa-calendar-plus"></i>
+                    <span>Book Appointment</span>
+                </div>
+                <div class="shortcut-card" onclick="showScreen('doctorsList')">
+                    <i class="fas fa-user-md"></i>
+                    <span>Find Doctor</span>
+                </div>
+                <div class="shortcut-card" onclick="showScreen('medicineOrders')">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Order Medicine</span>
+                </div>
+                <div class="shortcut-card" onclick="showScreen('diagnosticsTests')">
+                    <i class="fas fa-vial"></i>
+                    <span>Lab Test</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Search Section -->
+        <section class="search-section">
+            <div class="search-container">
+                <div class="search-bar-enhanced">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search doctors, specialties..." id="searchInput">
+                    <button class="filter-btn" onclick="toggleFilters()">
+                        <i class="fas fa-filter"></i>
+                    </button>
+                </div>
+                <div class="filter-chips" id="filterChips">
+                    <button class="chip active">All</button>
+                    <button class="chip">Cardiologist</button>
+                    <button class="chip">Dentist</button>
+                    <button class="chip">Orthopedic</button>
+                    <button class="chip">Dermatologist</button>
+                    <button class="chip">Pediatrician</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Upcoming Appointments -->
+        <section class="upcoming-appointments">
+            <h2>Upcoming Appointments</h2>
+            <div class="appointment-card">
+                <div class="doctor-info">
+                    <img src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=100&h=100&fit=crop&crop=face" alt="Dr. Ali Khan" class="doctor-avatar">
+                    <div class="doctor-details">
+                        <h3>Dr. Priya Sharma</h3>
+                        <p>Cardiology</p>
+                    </div>
+                    <button class="video-call-btn">
+                        <i class="fas fa-video"></i>
+                    </button>
+                </div>
+                <div class="appointment-time">
+                    <div class="date">
+                        <i class="fas fa-calendar"></i>
+                        <span>18 Nov, Monday</span>
+                    </div>
+                    <div class="time">
+                        <i class="fas fa-clock"></i>
+                        <span>8pm - 8:30 pm</span>
+                    </div>
+                </div>
+                <div class="appointment-actions">
+                    <button class="reschedule-btn" onclick="goToBooking()">Re-Schedule</button>
+                    <button class="view-profile-btn" onclick="goToBooking()">View Profile</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Popular Doctors -->
+        <section class="popular-doctors">
+            <h2>Popular Doctors</h2>
+            <div class="filter-tabs">
+                <button class="tab active">All</button>
+                <button class="tab">Cardiology</button>
+                <button class="tab">Dermatology</button>
+                <button class="tab">Neurology</button>
+            </div>
+            <div class="doctors-grid">
+                <div class="doctor-card" onclick="goToBooking()">
+                    <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=200&h=200&fit=crop&crop=face" alt="Doctor">
+                    <div class="doctor-info">
+                        <h4>Dr. Amit Patel</h4>
+                        <p>Cardiology • 2.5 km away</p>
+                        <div class="rating">
+                            <i class="fas fa-star"></i>
+                            <span>4.9</span>
+                            <span class="reviews">(190 Reviews)</span>
+                        </div>
+                    </div>
+                    <button class="bookmark-btn">
+                        <i class="far fa-bookmark"></i>
+                    </button>
+                </div>
+                <div class="doctor-card">
+                    <img src="https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=200&h=200&fit=crop&crop=face" alt="Doctor">
+                    <div class="doctor-info">
+                        <h4>Dr. Sunita Gupta</h4>
+                        <p>Dermatology • 1.8 km away</p>
+                        <div class="rating">
+                            <i class="fas fa-star"></i>
+                            <span>4.8</span>
+                            <span class="reviews">(156 Reviews)</span>
+                        </div>
+                    </div>
+                    <button class="bookmark-btn">
+                        <i class="far fa-bookmark"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <button class="nav-item active" onclick="goToDashboard()">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </button>
+            <button class="nav-item" onclick="showScreen('appointmentQueue')">
+                <i class="fas fa-calendar"></i>
+                <span>Queue</span>
+            </button>
+            <button class="nav-item" onclick="showScreen('medicalRecords')">
+                <i class="fas fa-file-medical"></i>
+                <span>Records</span>
+            </button>
+            <button class="nav-item" onclick="showScreen('patientProfile')">
+                <i class="fas fa-user"></i>
+                <span>Profile</span>
+            </button>
+        </nav>
+    </div>
+
+    <!-- Booking Screen -->
+    <div id="booking" class="screen">
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <span class="time">9:41</span>
+            <div class="status-icons">
+                <i class="fas fa-signal"></i>
+                <i class="fas fa-wifi"></i>
+                <i class="fas fa-battery-three-quarters"></i>
+            </div>
+        </div>
+
+        <!-- Header -->
+        <header class="booking-header">
+            <button class="back-btn" onclick="goToDashboard()">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <button class="share-btn">
+                <i class="fas fa-share"></i>
+            </button>
+        </header>
+
+        <!-- Doctor Profile -->
+        <section class="doctor-profile">
+            <div class="profile-content">
+                <div class="profile-info">
+                    <div class="rating-badge">
+                        <i class="fas fa-star"></i>
+                        <span>4.9</span>
+                    </div>
+                    <h2>Dr. Amit Patel</h2>
+                    <p>Cardiology</p>
+                </div>
+                <div class="doctor-image">
+                    <img src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=180&h=220&fit=crop&crop=face" alt="Doctor">
+                </div>
+            </div>
+        </section>
+
+        <!-- Date Selection -->
+        <section class="date-selection">
+            <h3 class="section-title">Select Date</h3>
+            <div class="calendar-header">
+                <button class="nav-arrow">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <span class="month-year">November 2025</span>
+                <button class="nav-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+            <div class="weekdays">
+                <span>Sun</span>
+                <span>Mon</span>
+                <span>Tue</span>
+                <span>Wed</span>
+                <span>Thu</span>
+                <span>Fri</span>
+                <span>Sat</span>
+            </div>
+            <div class="dates-grid">
+                <button class="date-btn">22</button>
+                <button class="date-btn">23</button>
+                <button class="date-btn selected">24</button>
+                <button class="date-btn">25</button>
+                <button class="date-btn">26</button>
+                <button class="date-btn">27</button>
+                <button class="date-btn">28</button>
+            </div>
+        </section>
+
+        <!-- Time Slots -->
+        <section class="time-slots">
+            <h3 class="section-title">Select Time</h3>
+            <div class="slots-header">
+                <button class="nav-arrow">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <span class="slots-count">8 Slots</span>
+                <button class="nav-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+            <div class="slots-grid">
+                <button class="time-slot">8:00 AM</button>
+                <button class="time-slot selected">9:30 AM</button>
+                <button class="time-slot">10:00 AM</button>
+                <button class="time-slot">10:30 AM</button>
+                <button class="time-slot">11:00 AM</button>
+                <button class="time-slot">11:30 AM</button>
+                <button class="time-slot">12:00 PM</button>
+                <button class="time-slot">12:30 PM</button>
+                <button class="time-slot">2:00 PM</button>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="booking-footer">
+            <button class="message-btn">
+                <i class="fas fa-comment"></i>
+            </button>
+            <button class="book-btn" onclick="bookAppointment()">Book an Appointment</button>
+        </footer>
+        
+        <!-- Home Indicator -->
+        <div class="home-indicator"></div>
+    </div>
+
+    <!-- Doctors List Screen -->
+    <div id="doctorsList" class="screen">
+        <header class="header">
+            <button class="back-btn" onclick="goToDashboard()">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <h2>Doctors</h2>
+            <button class="search-btn">
+                <i class="fas fa-search"></i>
+            </button>
+        </header>
+        
+        <div class="filter-tabs">
+            <button class="tab active">All</button>
+            <button class="tab">Cardiology</button>
+            <button class="tab">Dermatology</button>
+            <button class="tab">Neurology</button>
+        </div>
+        
+        <div class="doctors-list">
+            <div class="doctor-card" onclick="goToBooking()">
+                <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=80&h=80&fit=crop&crop=face" alt="Doctor">
+                <div class="doctor-info">
+                    <h4>Dr. Amit Patel</h4>
+                    <p>Cardiology</p>
+                    <div class="rating"><i class="fas fa-star"></i><span>4.9 (190 Reviews)</span></div>
+                </div>
+                <button class="bookmark-btn"><i class="far fa-bookmark"></i></button>
+            </div>
+            <div class="doctor-card" onclick="goToBooking()">
+                <img src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=80&h=80&fit=crop&crop=face" alt="Doctor">
+                <div class="doctor-info">
+                    <h4>Dr. Sunita Gupta</h4>
+                    <p>Dermatology</p>
+                    <div class="rating"><i class="fas fa-star"></i><span>4.8 (156 Reviews)</span></div>
+                </div>
+                <button class="bookmark-btn"><i class="far fa-bookmark"></i></button>
+            </div>
+            <div class="doctor-card" onclick="goToBooking()">
+                <img src="https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=80&h=80&fit=crop&crop=face" alt="Doctor">
+                <div class="doctor-info">
+                    <h4>Dr. Vikram Singh</h4>
+                    <p>Neurology</p>
+                    <div class="rating"><i class="fas fa-star"></i><span>4.7 (203 Reviews)</span></div>
+                </div>
+                <button class="bookmark-btn"><i class="far fa-bookmark"></i></button>
+            </div>
+            <div class="doctor-card" onclick="goToBooking()">
+                <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=80&h=80&fit=crop&crop=face" alt="Doctor">
+                <div class="doctor-info">
+                    <h4>Dr. Neha Agarwal</h4>
+                    <p>Orthopedics</p>
+                    <div class="rating"><i class="fas fa-star"></i><span>4.6 (178 Reviews)</span></div>
+                </div>
+                <button class="bookmark-btn"><i class="far fa-bookmark"></i></button>
+            </div>
+            <div class="doctor-card" onclick="goToBooking()">
+                <img src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=80&h=80&fit=crop&crop=face" alt="Doctor">
+                <div class="doctor-info">
+                    <h4>Dr. Ravi Mehta</h4>
+                    <p>Pediatrics</p>
+                    <div class="rating"><i class="fas fa-star"></i><span>4.9 (245 Reviews)</span></div>
+                </div>
+                <button class="bookmark-btn"><i class="far fa-bookmark"></i></button>
+            </div>
+            <div class="doctor-card" onclick="goToBooking()">
+                <img src="https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=80&h=80&fit=crop&crop=face" alt="Doctor">
+                <div class="doctor-info">
+                    <h4>Dr. Kavita Joshi</h4>
+                    <p>Gastroenterology</p>
+                    <div class="rating"><i class="fas fa-star"></i><span>4.5 (134 Reviews)</span></div>
+                </div>
+                <button class="bookmark-btn"><i class="far fa-bookmark"></i></button>
+            </div>
+            <div class="doctor-card" onclick="goToBooking()">
+                <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=80&h=80&fit=crop&crop=face" alt="Doctor">
+                <div class="doctor-info">
+                    <h4>Dr. Pooja Sharma</h4>
+                    <p>Gynecology</p>
+                    <div class="rating"><i class="fas fa-star"></i><span>4.8 (189 Reviews)</span></div>
+                </div>
+                <button class="bookmark-btn"><i class="far fa-bookmark"></i></button>
+            </div>
+            <div class="doctor-card" onclick="goToBooking()">
+                <img src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=80&h=80&fit=crop&crop=face" alt="Doctor">
+                <div class="doctor-info">
+                    <h4>Dr. Arjun Reddy</h4>
+                    <p>Ophthalmology</p>
+                    <div class="rating"><i class="fas fa-star"></i><span>4.7 (167 Reviews)</span></div>
+                </div>
+                <button class="bookmark-btn"><i class="far fa-bookmark"></i></button>
+            </div>
+            <div class="doctor-card" onclick="goToBooking()">
+                <img src="https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=80&h=80&fit=crop&crop=face" alt="Doctor">
+                <div class="doctor-info">
+                    <h4>Dr. Meera Nair</h4>
+                    <p>Psychiatry</p>
+                    <div class="rating"><i class="fas fa-star"></i><span>4.6 (198 Reviews)</span></div>
+                </div>
+                <button class="bookmark-btn"><i class="far fa-bookmark"></i></button>
+            </div>
+            <div class="doctor-card" onclick="goToBooking()">
+                <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=80&h=80&fit=crop&crop=face" alt="Doctor">
+                <div class="doctor-info">
+                    <h4>Dr. Rohit Verma</h4>
+                    <p>Urology</p>
+                    <div class="rating"><i class="fas fa-star"></i><span>4.4 (142 Reviews)</span></div>
+                </div>
+                <button class="bookmark-btn"><i class="far fa-bookmark"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Appointment Queue Screen -->
+    <div id="appointmentQueue" class="screen">
+        <header class="header">
+            <button class="back-btn" onclick="goToDashboard()">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <h2>Queue Status</h2>
+        </header>
+        
+        <div class="queue-status">
+            <div class="current-patient">
+                <h3>Currently Serving</h3>
+                <div class="patient-number">15</div>
+            </div>
+            <div class="your-turn">
+                <h3>Your Number</h3>
+                <div class="patient-number your">23</div>
+                <p>8 patients ahead</p>
+                <p class="wait-time">~40 min wait</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Medical Records Screen -->
+    <div id="medicalRecords" class="screen">
+        <header class="header">
+            <button class="back-btn" onclick="goToDashboard()">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <h2>Medical Records</h2>
+        </header>
+        
+        <div class="records-list">
+            <div class="record-card">
+                <div class="record-date">Nov 18, 2025</div>
+                <h4>General Checkup</h4>
+                <p>Dr. Amit Patel - Cardiology</p>
+                <div class="record-status completed">Completed</div>
+            </div>
+            <div class="record-card">
+                <div class="record-date">Nov 15, 2025</div>
+                <h4>Skin Consultation</h4>
+                <p>Dr. Sunita Gupta - Dermatology</p>
+                <div class="record-status completed">Completed</div>
+            </div>
+            <div class="record-card">
+                <div class="record-date">Nov 10, 2025</div>
+                <h4>Neurological Exam</h4>
+                <p>Dr. Vikram Singh - Neurology</p>
+                <div class="record-status completed">Completed</div>
+            </div>
+            <div class="record-card">
+                <div class="record-date">Nov 5, 2025</div>
+                <h4>Orthopedic Review</h4>
+                <p>Dr. Neha Agarwal - Orthopedics</p>
+                <div class="record-status completed">Completed</div>
+            </div>
+            <div class="record-card">
+                <div class="record-date">Oct 28, 2025</div>
+                <h4>Pediatric Checkup</h4>
+                <p>Dr. Ravi Mehta - Pediatrics</p>
+                <div class="record-status completed">Completed</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Diagnostics Tests Screen -->
+    <div id="diagnosticsTests" class="screen">
+        <header class="header">
+            <button class="back-btn" onclick="goToDashboard()">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <h2>Diagnostic Tests</h2>
+        </header>
+        
+        <div class="tests-grid">
+            <div class="test-card">
+                <i class="fas fa-vial"></i>
+                <h4>Blood Test</h4>
+                <p>Complete Blood Count</p>
+                <button class="book-test-btn">Book Test</button>
+            </div>
+            <div class="test-card">
+                <i class="fas fa-x-ray"></i>
+                <h4>X-Ray</h4>
+                <p>Chest X-Ray</p>
+                <button class="book-test-btn">Book Test</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Medicine Orders Screen -->
+    <div id="medicineOrders" class="screen">
+        <header class="header">
+            <button class="back-btn" onclick="goToDashboard()">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <h2>Medicine Orders</h2>
+        </header>
+        
+        <div class="search-bar">
+            <i class="fas fa-search"></i>
+            <input type="text" placeholder="Search medicines...">
+        </div>
+        
+        <div class="medicine-list">
+            <div class="medicine-card">
+                <h4>Paracetamol 500mg</h4>
+                <p>Pain Relief</p>
+                <div class="price">₹125</div>
+                <button class="add-to-cart-btn">Add to Cart</button>
+            </div>
+            <div class="medicine-card">
+                <h4>Ibuprofen 400mg</h4>
+                <p>Anti-inflammatory</p>
+                <div class="price">₹152</div>
+                <button class="add-to-cart-btn">Add to Cart</button>
+            </div>
+            <div class="medicine-card">
+                <h4>Amoxicillin 250mg</h4>
+                <p>Antibiotic</p>
+                <div class="price">₹228</div>
+                <button class="add-to-cart-btn">Add to Cart</button>
+            </div>
+            <div class="medicine-card">
+                <h4>Cetirizine 10mg</h4>
+                <p>Antihistamine</p>
+                <div class="price">₹89</div>
+                <button class="add-to-cart-btn">Add to Cart</button>
+            </div>
+            <div class="medicine-card">
+                <h4>Omeprazole 20mg</h4>
+                <p>Acid Reducer</p>
+                <div class="price">₹186</div>
+                <button class="add-to-cart-btn">Add to Cart</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Medical History Timeline Screen -->
+    <div id="medicalHistory" class="screen">
+        <header class="header">
+            <button class="back-btn" onclick="goToDashboard()">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <h2>Medical History</h2>
+        </header>
+        
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-date">Nov 2025</div>
+                <div class="timeline-content">
+                    <h4>Cardiology Consultation</h4>
+                    <p>Regular checkup with Dr. Sarah Wilson</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Symptom Checker Screen -->
+    <div id="symptomChecker" class="screen">
+        <header class="header">
+            <button class="back-btn" onclick="goToDashboard()">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <h2>Symptom Checker</h2>
+        </header>
+        
+        <div class="symptom-input">
+            <h3>What symptoms are you experiencing?</h3>
+            <div class="symptoms-grid">
+                <button class="symptom-btn">Headache</button>
+                <button class="symptom-btn">Fever</button>
+                <button class="symptom-btn">Cough</button>
+                <button class="symptom-btn">Fatigue</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Health Vitals Screen -->
+    <div id="healthVitals" class="screen">
+        <header class="header">
+            <button class="back-btn" onclick="goToDashboard()">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <h2>Health Vitals</h2>
+        </header>
+        
+        <div class="vitals-cards">
+            <div class="vital-card">
+                <h4>Blood Pressure</h4>
+                <div class="vital-value">120/80</div>
+                <div class="vital-chart"></div>
+            </div>
+            <div class="vital-card">
+                <h4>Heart Rate</h4>
+                <div class="vital-value">72 bpm</div>
+                <div class="vital-chart"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reminders Screen -->
+    <div id="reminders" class="screen">
+        <header class="header">
+            <button class="back-btn" onclick="goToDashboard()">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <h2>Reminders</h2>
+        </header>
+        
+        <div class="reminders-list">
+            <div class="reminder-card">
+                <i class="fas fa-pills"></i>
+                <div class="reminder-info">
+                    <h4>Take Medication</h4>
+                    <p>Paracetamol - 2 tablets</p>
+                    <span class="reminder-time">8:00 AM</span>
+                </div>
+            </div>
+            <div class="reminder-card">
+                <i class="fas fa-calendar"></i>
+                <div class="reminder-info">
+                    <h4>Appointment</h4>
+                    <p>Dr. Amit Patel - Cardiology</p>
+                    <span class="reminder-time">2:00 PM</span>
+                </div>
+            </div>
+            <div class="reminder-card">
+                <i class="fas fa-pills"></i>
+                <div class="reminder-info">
+                    <h4>Take Medication</h4>
+                    <p>Ibuprofen - 1 tablet</p>
+                    <span class="reminder-time">6:00 PM</span>
+                </div>
+            </div>
+            <div class="reminder-card">
+                <i class="fas fa-vial"></i>
+                <div class="reminder-info">
+                    <h4>Lab Test</h4>
+                    <p>Blood Test - Fasting required</p>
+                    <span class="reminder-time">Tomorrow 9:00 AM</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Patient Profile Screen -->
+    <div id="patientProfile" class="screen">
+        <header class="header">
+            <button class="back-btn" onclick="goToDashboard()">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <h2>Profile</h2>
+        </header>
+        
+        <div class="profile-section">
+            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face" alt="User" class="profile-avatar">
+            <h3>Rajesh Kumar</h3>
+            <p>Patient ID: #12345</p>
+        </div>
+        
+        <div class="profile-form">
+            <div class="form-group">
+                <label>Full Name *</label>
+                <input type="text" value="Rajesh Kumar" required>
+            </div>
+            
+            <div class="form-group">
+                <label>Age *</label>
+                <input type="number" value="28" required>
+            </div>
+            
+            <div class="form-group">
+                <label>Gender *</label>
+                <div class="radio-group">
+                    <label><input type="radio" name="gender" value="male" checked> Male</label>
+                    <label><input type="radio" name="gender" value="female"> Female</label>
+                    <label><input type="radio" name="gender" value="other"> Other</label>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>Blood Group</label>
+                <select>
+                    <option value="">Select Blood Group</option>
+                    <option value="A+" selected>A+</option>
+                    <option value="A-">A-</option>
+                    <option value="B+">B+</option>
+                    <option value="B-">B-</option>
+                    <option value="AB+">AB+</option>
+                    <option value="AB-">AB-</option>
+                    <option value="O+">O+</option>
+                    <option value="O-">O-</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>Mobile Number *</label>
+                <input type="tel" value="+91 98765 43210" required>
+            </div>
+            
+            <div class="form-group">
+                <label>Email ID</label>
+                <input type="email" value="rajesh.kumar@gmail.com">
+            </div>
+            
+            <div class="form-group">
+                <label>Full Address *</label>
+                <textarea required>A-204, Shanti Apartments
+Andheri West, Mumbai - 400058
+Maharashtra, India</textarea>
+            </div>
+            
+            <button class="save-btn" onclick="saveProfile()">Save Profile</button>
+        </div>
+    </div>
+
+    <!-- Notifications Screen -->
+    <div id="notifications" class="screen">
+        <header class="header">
+            <button class="back-btn" onclick="goToDashboard()">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <h2>Notifications</h2>
+        </header>
+        
+        <div class="notifications-list">
+            <div class="notification-card">
+                <i class="fas fa-calendar"></i>
+                <div class="notification-content">
+                    <h4>Appointment Reminder</h4>
+                    <p>Your appointment with Dr. Amit Patel is tomorrow at 9:30 AM</p>
+                    <span class="notification-time">2 hours ago</span>
+                </div>
+            </div>
+            <div class="notification-card">
+                <i class="fas fa-pills"></i>
+                <div class="notification-content">
+                    <h4>Medication Reminder</h4>
+                    <p>Time to take your Paracetamol - 2 tablets</p>
+                    <span class="notification-time">4 hours ago</span>
+                </div>
+            </div>
+            <div class="notification-card">
+                <i class="fas fa-check-circle"></i>
+                <div class="notification-content">
+                    <h4>Test Results Ready</h4>
+                    <p>Your blood test results are now available</p>
+                    <span class="notification-time">1 day ago</span>
+                </div>
+            </div>
+            <div class="notification-card">
+                <i class="fas fa-user-md"></i>
+                <div class="notification-content">
+                    <h4>New Doctor Available</h4>
+                    <p>Dr. Rohit Verma is now accepting appointments</p>
+                    <span class="notification-time">2 days ago</span>
+                </div>
+            </div>
+            <div class="notification-card">
+                <i class="fas fa-star"></i>
+                <div class="notification-content">
+                    <h4>Rate Your Experience</h4>
+                    <p>Please rate your recent visit with Dr. Sunita Gupta</p>
+                    <span class="notification-time">3 days ago</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Feedback Screen -->
+    <div id="feedback" class="screen">
+        <header class="header">
+            <button class="back-btn" onclick="goToDashboard()">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <h2>Feedback</h2>
+        </header>
+        
+        <div class="feedback-form">
+            <h3>Rate your experience</h3>
+            <div class="rating-stars">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="far fa-star"></i>
+            </div>
+            <textarea placeholder="Write your feedback..."></textarea>
+            <button class="submit-btn" onclick="submitFeedback()">Submit Feedback</button>
+        </div>
+    </div>
+
+    <!-- Location Modal -->
+    <div id="locationModal" class="modal">
+        <div class="modal-content location-modal">
+            <div class="modal-header">
+                <h3>Select Location</h3>
+                <button class="close-btn" onclick="closeLocationModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="location-search">
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search area, city..." id="locationSearch">
+                </div>
+                <button class="current-location-btn" onclick="getCurrentLocation()">
+                    <i class="fas fa-crosshairs"></i>
+                    Use Current Location
+                </button>
+            </div>
+            <div class="location-list">
+                <div class="location-item" onclick="selectLocation('Andheri West, Mumbai')">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <div>
+                        <h4>Andheri West</h4>
+                        <p>Mumbai, Maharashtra</p>
+                    </div>
+                </div>
+                <div class="location-item" onclick="selectLocation('Bandra East, Mumbai')">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <div>
+                        <h4>Bandra East</h4>
+                        <p>Mumbai, Maharashtra</p>
+                    </div>
+                </div>
+                <div class="location-item" onclick="selectLocation('Powai, Mumbai')">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <div>
+                        <h4>Powai</h4>
+                        <p>Mumbai, Maharashtra</p>
+                    </div>
+                </div>
+                <div class="location-item" onclick="selectLocation('Koramangala, Bangalore')">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <div>
+                        <h4>Koramangala</h4>
+                        <p>Bangalore, Karnataka</p>
+                    </div>
+                </div>
+                <div class="location-item" onclick="selectLocation('Connaught Place, Delhi')">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <div>
+                        <h4>Connaught Place</h4>
+                        <p>New Delhi, Delhi</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmationModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <i class="fas fa-check-circle"></i>
+                <h3>Appointment Booked!</h3>
+            </div>
+            <p>Your appointment with Dr. Amit Patel has been successfully booked for November 24, 2025 at 9:30 AM.</p>
+            <button class="modal-btn" onclick="closeModal()">Done</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
